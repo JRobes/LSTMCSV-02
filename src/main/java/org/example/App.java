@@ -19,7 +19,7 @@ public class App
 {
     public static void main( String[] args ) throws IOException, InterruptedException {
         System.out.println( "Hello World!" );
-        File baseDir = new File("/path/to/base_directory/");
+        File baseDir = new File("C:\\Users\\COTERENA\\Desktop\\CSV");
         // We are using a random number generator to randomize the order
         InputSplit inputSplit = new FileSplit(baseDir);
         int numLinesToSkip = 0; //Optional, allows us to skip header lines
@@ -27,13 +27,23 @@ public class App
         SequenceRecordReader reader = new CSVSequenceRecordReader(numLinesToSkip, delimiter);
         reader.initialize(inputSplit);
         int minibatchSize = 10; //Number of examples in each minibatch
-        int labelIndex = 7; //Index of column that contains the label
+        int labelIndex = 0; //Index of column that contains the label
         int numClasses = 5; //Number of classes (label categories)
         DataSetIterator iterator =
-                new SequenceRecordReaderDataSetIterator( reader, minibatchSize, labelIndex, numClasses);
-        // Metemos mas datos
+                new SequenceRecordReaderDataSetIterator(reader, minibatchSize, labelIndex, numClasses);
+        System.out.println(iterator.);
         DataSetIterator iterator2 =
-                new SequenceRecordReaderDataSetIterator( reader, minibatchSize, labelIndex, numClasses);
+                new SequenceRecordReaderDataSetIterator(reader,);
+/*
+        SequenceRecordReaderDataSetIterator iterator =
+                new SequenceRecordReaderDataSetIterator(
+                        trainFeatures,
+                        trainLabels,
+                        miniBatchSize,
+                        -1,      // no clasificación
+                        true     // regresión
+                );
+*/
         //myNetwork.fit(iterator);
     }
 }
