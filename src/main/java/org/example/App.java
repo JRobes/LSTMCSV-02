@@ -34,16 +34,16 @@ public class App
         System.out.println(iterator.);
         DataSetIterator iterator2 =
                 new SequenceRecordReaderDataSetIterator(reader,);
-/*
+
         SequenceRecordReaderDataSetIterator iterator =
                 new SequenceRecordReaderDataSetIterator(
                         trainFeatures,
                         trainLabels,
-                        miniBatchSize,
+                        minibatchSize,
                         -1,      // no clasificación
                         true     // regresión
                 );
-*/
+
         //myNetwork.fit(iterator);
     }
 }
