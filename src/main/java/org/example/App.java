@@ -31,7 +31,9 @@ public class App
         int numClasses = 5; //Number of classes (label categories)
         DataSetIterator iterator =
                 new SequenceRecordReaderDataSetIterator( reader, minibatchSize, labelIndex, numClasses);
-
+        // Metemos mas datos
+        DataSetIterator iterator2 =
+                new SequenceRecordReaderDataSetIterator( reader, minibatchSize, labelIndex, numClasses);
         //myNetwork.fit(iterator);
     }
 }
