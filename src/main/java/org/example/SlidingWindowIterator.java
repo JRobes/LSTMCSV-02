@@ -10,21 +10,28 @@ import org.nd4j.linalg.factory.Nd4j;
 
 public class SlidingWindowIterator implements DataSetIterator {
 
-    private INDArray data;              // [timeSteps, features]
+    private INDArray data;              // [timeSteps, columns]
     private int windowSize;
     private int batchSize;
+    private int labelColumn;
+
     private int cursor = 0;
     private int numExamples;
-    private int numFeatures;
+    private int numColumns;
 
     private DataSetPreProcessor preProcessor;
 
-    public SlidingWindowIterator(INDArray data, int windowSize, int batchSize) {
+    public SlidingWindowIterator(INDArray data,
+                                 int windowSize,
+                                 int batchSize,
+                                 int labelColumn) {
+
         this.data = data;
         this.windowSize = windowSize;
         this.batchSize = batchSize;
+        this.labelColumn = labelColumn;
 
-        this.numFeatures = (int) data.size(1);
+        this.numColumns = (int) data.size(1);
         this.numExamples = (int) data.size(0) - windowSize;
     }
 
@@ -47,20 +54,21 @@ public class SlidingWindowIterator implements DataSetIterator {
 
         int actualBatch = Math.min(num, numExamples - cursor);
 
-        INDArray features = Nd4j.create(actualBatch, numFeatures, windowSize);
-        INDArray labels = Nd4j.create(actualBatch, numFeatures);
+        INDArray features = Nd4j.create(actualBatch, numColumns, windowSize);
+        INDArray labels = Nd4j.create(actualBatch, 1);
 
         for (int i = 0; i < actualBatch; i++) {
 
             int start = cursor + i;
             int end = start + windowSize;
 
+            // ventana completa como features
             INDArray window = data.getRows(start, end - 1).transpose();
-
             features.putRow(i, window);
 
-            INDArray label = data.getRow(end);
-            labels.putRow(i, label);
+            // label = columna específica en el timestep siguiente
+            double labelValue = data.getDouble(end, labelColumn);
+            labels.putScalar(i, 0, labelValue);
         }
 
         cursor += actualBatch;
@@ -76,12 +84,12 @@ public class SlidingWindowIterator implements DataSetIterator {
 
     @Override
     public int inputColumns() {
-        return numFeatures;
+        return numColumns;
     }
 
     @Override
     public int totalOutcomes() {
-        return numFeatures;
+        return 1;
     }
 
     @Override

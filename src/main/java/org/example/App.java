@@ -24,37 +24,41 @@ public class App
 {
     public static void main( String[] args ) throws IOException, InterruptedException {
         System.out.println( "Hello World!" );
-        List<String> lines = Files.readAllLines(Paths.get("Gold Price (2013-2023).csv"));
+        List<String> lines = Files.readAllLines(Paths.get("Gold Price.csv"));
         System.out.println(lines.size());
-/*
         int N = lines.size();
         int M = lines.get(0).split(",").length;
-
+        System.out.println("N: " + N + "\tM: " + M);
         double[][] matrix = new double[N][M];
-
-        for (int i = 0; i < N; i++) {
+        for (int i = 1; i < N; i++) { //saltar una linea
             String[] values = lines.get(i).split(",");
-
             for (int j = 0; j < M; j++) {
                 matrix[i][j] = Double.parseDouble(values[j]);
             }
         }
-
         INDArray data = Nd4j.create(matrix);
+        //System.out.println(data);
+        int minibatchSize = 10; //Number of examples in each minibatch
+        int windowSize = 60;
+        int labelColumn = 0;
+        DataSetIterator iterator = new SlidingWindowIterator(data, minibatchSize, windowSize, labelColumn);
 
-        System.out.println(data);
+        //Si tu red es RNN/LSTM, el shape suele ser:
+        //[batchSize, numFeatures, timeSteps]
+        //Se comprueba con:
+        //System.out.println(Arrays.toString(ds.getFeatures().shape()));
 
-        File baseDir = new File("C:\\Users\\COTERENA\\Desktop\\CSV");
+
 
         // We are using a random number generator to randomize the order
-        InputSplit inputSplit = new FileSplit(baseDir);
+
+        //InputSplit inputSplit = new FileSplit(baseDir);
         int numLinesToSkip = 0; //Optional, allows us to skip header lines
         String delimiter = ","; //Comma-delimited files
         SequenceRecordReader reader = new CSVSequenceRecordReader(numLinesToSkip, delimiter);
-        reader.initialize(inputSplit);
-        int minibatchSize = 10; //Number of examples in each minibatch
-        int labelIndex = 0; //Index of column that contains the label
-        int numClasses = 5; //Number of classes (label categories)
+
+/*
+
         DataSetIterator iterator =
                 new SequenceRecordReaderDataSetIterator(reader, minibatchSize, labelIndex, numClasses);
 
