@@ -22,40 +22,51 @@ import java.util.List;
  */
 public class App 
 {
+    private static int lines2Skip = 1;
+    private static int minibatchSize = 10; //Number of examples in each minibatch
+    private static int windowSize = 60;
+    private static int labelColumn = 0;
+    private static double percentageOfTest = 0.2; //Entero de 1 a 100
     public static void main( String[] args ) throws IOException, InterruptedException {
         System.out.println( "Hello World!" );
         List<String> lines = Files.readAllLines(Paths.get("Gold Price.csv"));
-        System.out.println(lines.size());
-        int N = lines.size();
-        int M = lines.get(0).split(",").length;
-        System.out.println("N: " + N + "\tM: " + M);
-        double[][] matrix = new double[N][M];
-        for (int i = 1; i < N; i++) { //saltar una linea
+        System.out.println("En archivo csv número total de líneas: " + lines.size());
+        int totalSamples = lines.size()-lines2Skip;
+        int numFeatures = lines.get(0).split(",").length;
+        System.out.println("Num lineas con datos: " + totalSamples + "\tNúmero features: " + numFeatures);
+        double[][] matrix = new double[totalSamples][numFeatures];
+
+        for (int i = lines2Skip; i < totalSamples; i++) { //saltar las lineas indicadas
             String[] values = lines.get(i).split(",");
-            for (int j = 0; j < M; j++) {
+            for (int j = 0; j < numFeatures; j++) {
                 matrix[i][j] = Double.parseDouble(values[j]);
             }
         }
-        INDArray data = Nd4j.create(matrix);
+        if(windowSize + 1 > totalSamples){
+            System.out.println("El númeor total de muestras +1 es menor que el tamaño de la ventana, no sale ni una secuencia... se cierra el programa");
+            return;
+        }
+        int numSequences = totalSamples - windowSize + 1 - 1; //Ojo hay que quitar la primera linea que solo label
+        System.out.println("Número de secuencias: " + numSequences);
+        int testSequences = (int)(numSequences*percentageOfTest);
+        System.out.println("Secuencias de test: " + testSequences);
+
+
+        //INDArray data = Nd4j.create(matrix);
         //System.out.println(data);
-        int minibatchSize = 10; //Number of examples in each minibatch
-        int windowSize = 60;
-        int labelColumn = 0;
-        DataSetIterator iterator = new SlidingWindowIterator(data, minibatchSize, windowSize, labelColumn);
+
+        //DataSetIterator iterator = new SlidingWindowIterator(data, minibatchSize, windowSize, labelColumn);
+        //iterator.next();
 
         //Si tu red es RNN/LSTM, el shape suele ser:
         //[batchSize, numFeatures, timeSteps]
         //Se comprueba con:
         //System.out.println(Arrays.toString(ds.getFeatures().shape()));
 
-
-
-        // We are using a random number generator to randomize the order
-
         //InputSplit inputSplit = new FileSplit(baseDir);
-        int numLinesToSkip = 0; //Optional, allows us to skip header lines
-        String delimiter = ","; //Comma-delimited files
-        SequenceRecordReader reader = new CSVSequenceRecordReader(numLinesToSkip, delimiter);
+        //int numLinesToSkip = 0; //Optional, allows us to skip header lines
+        //String delimiter = ","; //Comma-delimited files
+        //SequenceRecordReader reader = new CSVSequenceRecordReader(numLinesToSkip, delimiter);
 
 /*
 

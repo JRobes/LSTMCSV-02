@@ -1,4 +1,5 @@
 package org.example;
+import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -78,7 +79,7 @@ public class SlidingWindowIterator implements DataSetIterator {
         if (preProcessor != null) {
             preProcessor.preProcess(ds);
         }
-
+        System.out.println("DataSet: " + Arrays.toString(ds.getFeatures().shape()));
         return ds;
     }
 
