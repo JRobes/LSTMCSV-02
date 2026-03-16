@@ -62,7 +62,7 @@ public class App
 
         //INDArray testLabels = Nd4j.create(minibatchSize, 1, windowSize);
         String[][][] testLabels = new String[minibatchSize][1][windowSize];
-        for (int i = 0; i < testSequences; i++) {
+        for (int i = 0; i < minibatchSize; i++) {
             for (int t = 0; t < windowSize; t++) {
                 testLabels[i][0][t] = matrix[i+t][0];
             }
