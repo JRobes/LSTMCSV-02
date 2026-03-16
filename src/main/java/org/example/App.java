@@ -54,22 +54,36 @@ public class App
         System.out.println("Número de secuencias: " + numSequences);
         int testSequences = (int)(numSequences*percentageOfTest);
         System.out.println("Secuencias de test: " + testSequences);
-        double[][][] labelTestArray = new double[minibatchSize][1][1];//
+        int trainSequences = numSequences - testSequences;
 
-        INDArray labels = Nd4j.create(minibatchSize, 1, windowSize);
-        for (int i = 0; i < minibatchSize; i++) {
+        INDArray testLabels = Nd4j.create(testSequences, 1, windowSize);
+        for (int i = 0; i < testSequences; i++) {
             for (int t = 0; t < windowSize; t++) {
 
                // for (int f = 0; f < 4; f++) {
                //     input.putScalar(new int[]{i, f, t}, data[i+t][f]);
                // }
 
-                labels.putScalar(new int[]{i, 0, t}, matrix[i+t][0]);
+                testLabels.putScalar(new int[]{i, 0, t}, matrix[i+t][0]);
             }
         }
-        System.out.println(Arrays.toString(labels.shape()));
+        //System.out.println("Test labels shape: " + Arrays.toString(testLabels.shape()));
+        //System.out.println(testLabels);
 
-        System.out.println(labels);
+        INDArray trainLabels = Nd4j.create(numSequences - testSequences, 1, windowSize);
+        for (int i = 0; i < trainSequences; i++) {
+            for (int t = 0; t < windowSize; t++) {
+
+                trainLabels.putScalar(new int[]{i, 0, t}, matrix[i + testSequences +t][0]);
+            }
+        }
+        //System.out.println("Train labels shape: " + Arrays.toString(trainLabels.shape()));
+        //System.out.println(trainLabels);
+
+
+
+
+
 
 
         //INDArray data = Nd4j.create(matrix);
