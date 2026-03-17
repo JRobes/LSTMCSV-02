@@ -13,20 +13,43 @@ public class App
 {
     private static int lines2Skip = 1;
     private static double percentageOfTrain = 0.8; //Entero de 1 a 100
-    private static int minibatchSize = 4; //Number of examples in each minibatch
     private static int windowSize = 7;
+    private static int minibatchSize = 4; //Number of examples in each minibatch
     private static int labelColumn = 0;
     public static void main( String[] args ) throws IOException, InterruptedException {
         System.out.println( "Hello World!" );
-        List<String> lines = Files.readAllLines(Paths.get("test-2.csv"));
+        List<String> lines = Files.readAllLines(Paths.get("test.csv"));
         System.out.println("En archivo csv número total de líneas: " + lines.size());
-        int totalSamples = lines.size()-lines2Skip;
+        //lines.
+        int totalSamples   = lines.size() - lines2Skip;
         int trainSequences = (int)(totalSamples * percentageOfTrain);
-        int testSequences = totalSamples - trainSequences;
-
-
-
+        int testSequences  = totalSamples - trainSequences;
+        System.out.println("Total Samples:\t\t"  + totalSamples);
+        System.out.println("Train Samples:\t\t"  + trainSequences);
+        System.out.println("Test Sequences:\t\t" + testSequences);
         int numFeatures = lines.get(lines2Skip).split(",").length;
+        double[][] testMatrix = new double[testSequences + windowSize][numFeatures];
+
+        int filas = lines.size();
+        double[][] resultado = new double[testSequences + windowSize][];
+
+        for (int i = 0; i < filas; i++) {
+            String[] valores = lines.get(i).split(",");
+            resultado[i] = new double[valores.length];
+
+            for (int j = 0; j < valores.length; j++) {
+                resultado[i][j] = Double.parseDouble(valores[j]);
+            }
+        }
+
+
+
+
+
+
+
+
+/*
         System.out.println("Num lineas con datos: " + totalSamples + "\tNúmero features: " + numFeatures);
         //double[][] matrix = new double[totalSamples][numFeatures];
         String[][] matrix = new String[totalSamples][numFeatures];
@@ -70,7 +93,7 @@ public class App
             }
         }
 
-
+*/
         /*
         INDArray trainLabels = Nd4j.create(numSequences - testSequences, 1, windowSize);
         for (int i = 0; i < trainSequences; i++) {
