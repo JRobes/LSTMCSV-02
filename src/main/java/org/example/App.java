@@ -1,20 +1,8 @@
 package org.example;
 
-import org.datavec.api.records.reader.SequenceRecordReader;
-import org.datavec.api.records.reader.impl.csv.CSVSequenceRecordReader;
-import org.datavec.api.split.FileSplit;
-import org.datavec.api.split.InputSplit;
-import org.deeplearning4j.datasets.datavec.SequenceRecordReaderDataSetIterator;
-import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.rng.Random;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
-import org.nd4j.linalg.factory.Nd4j;
-
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -24,15 +12,20 @@ import java.util.List;
 public class App 
 {
     private static int lines2Skip = 1;
+    private static double percentageOfTrain = 0.8; //Entero de 1 a 100
     private static int minibatchSize = 4; //Number of examples in each minibatch
     private static int windowSize = 7;
     private static int labelColumn = 0;
-    private static double percentageOfTest = 0.2; //Entero de 1 a 100
     public static void main( String[] args ) throws IOException, InterruptedException {
         System.out.println( "Hello World!" );
         List<String> lines = Files.readAllLines(Paths.get("test-2.csv"));
         System.out.println("En archivo csv número total de líneas: " + lines.size());
         int totalSamples = lines.size()-lines2Skip;
+        int trainSequences = (int)(totalSamples * percentageOfTrain);
+        int testSequences = totalSamples - trainSequences;
+
+
+
         int numFeatures = lines.get(lines2Skip).split(",").length;
         System.out.println("Num lineas con datos: " + totalSamples + "\tNúmero features: " + numFeatures);
         //double[][] matrix = new double[totalSamples][numFeatures];
@@ -56,7 +49,7 @@ public class App
         }
         int numSequences = totalSamples - windowSize + 1 - 1; //Ojo hay que quitar la primera linea que solo label
         System.out.println("Número de secuencias: " + numSequences);
-        int testSequences = (int)(numSequences*percentageOfTest);
+        int testSequences = (int)(numSequences* percentageOfTrain);
         System.out.println("Secuencias de test: " + testSequences);
         int trainSequences = numSequences - testSequences;
 
