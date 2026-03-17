@@ -31,23 +31,26 @@ public class App
         System.out.println("Train Samples:\t\t"  + trainSequences);
         System.out.println("Test Sequences:\t\t" + testSequences);
         int numFeatures = lines.get(0).split(",").length;
-        System.out.println(numFeatures);
+        System.out.println("Num features:" + numFeatures);
+        List<String> testRows = lines.subList(totalSamples - trainSequences - windowSize, lines.size());
+        System.out.println("Lineas de test: " + testRows.size());
+
         double[][] testMatrix = new double[testSequences + windowSize][numFeatures];
 
         int filas = lines.size();
         double[][] resultado = new double[testSequences + windowSize][numFeatures];
-
-        for (int i = (totalSamples - testSequences - windowSize + 1); i < totalSamples; i++) {
+/*
+        for (int i = (totalSamples - trainSequences - windowSize ); i < totalSamples; i++) {
             String[] valores = lines.get(i).split(",");
             System.out.println(valores[0] + "    " +valores[1]);
 
             //testMatrix[i] = new double[valores.length];
 
-            //for (int j = 0; j < valores.length; j++) {
-            //    testMatrix[i][j] = Double.parseDouble(valores[j]);
-            //}
+            for (int j = 0; j < valores.length; j++) {
+                testMatrix[i][j] = Double.parseDouble(valores[j]);
+            }
         }
-
+*/
 
 
 
