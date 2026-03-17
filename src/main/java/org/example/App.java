@@ -20,26 +20,32 @@ public class App
         System.out.println( "Hello World!" );
         List<String> lines = Files.readAllLines(Paths.get("test.csv"));
         System.out.println("En archivo csv número total de líneas: " + lines.size());
+        for(int i = 0; i < lines2Skip; i++){
+            lines.remove(0);
+        }
         //lines.
-        int totalSamples   = lines.size() - lines2Skip;
+        int totalSamples   = lines.size();
         int trainSequences = (int)(totalSamples * percentageOfTrain);
         int testSequences  = totalSamples - trainSequences;
         System.out.println("Total Samples:\t\t"  + totalSamples);
         System.out.println("Train Samples:\t\t"  + trainSequences);
         System.out.println("Test Sequences:\t\t" + testSequences);
-        int numFeatures = lines.get(lines2Skip).split(",").length;
+        int numFeatures = lines.get(0).split(",").length;
+        System.out.println(numFeatures);
         double[][] testMatrix = new double[testSequences + windowSize][numFeatures];
 
         int filas = lines.size();
-        double[][] resultado = new double[testSequences + windowSize][];
+        double[][] resultado = new double[testSequences + windowSize][numFeatures];
 
-        for (int i = 0; i < filas; i++) {
+        for (int i = (totalSamples - testSequences - windowSize + 1); i < totalSamples; i++) {
             String[] valores = lines.get(i).split(",");
-            resultado[i] = new double[valores.length];
+            System.out.println(valores[0] + "    " +valores[1]);
 
-            for (int j = 0; j < valores.length; j++) {
-                resultado[i][j] = Double.parseDouble(valores[j]);
-            }
+            //testMatrix[i] = new double[valores.length];
+
+            //for (int j = 0; j < valores.length; j++) {
+            //    testMatrix[i][j] = Double.parseDouble(valores[j]);
+            //}
         }
 
 
