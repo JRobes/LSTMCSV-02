@@ -52,10 +52,13 @@ public class App
         long[] shape2 = dataTrain.shape();
         System.out.println("INDArray train: " + Arrays.toString(shape2));
 
+        List<DataSet> win = createWindows(dataTest, 0);
+
+        System.out.println(win.get(0).toString());
 
     }
 
-    private void createWindows(INDArray data, int labelIndex) {
+    private static List<DataSet> createWindows(INDArray data, int labelIndex) {
         List<DataSet> windows = new ArrayList<>();
 
         int rows = data.rows();
@@ -76,6 +79,9 @@ public class App
 
             windows.add(new DataSet(features3d, labels2d));
         }
+
+
+        return windows;
     }
 
 
