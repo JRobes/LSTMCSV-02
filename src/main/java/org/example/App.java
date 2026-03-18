@@ -1,8 +1,12 @@
 package org.example;
 
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,137 +44,30 @@ public class App
         List<String> trainList = lines.subList(0 ,trainSequences);
         System.out.println("Lineas en lista de train: " + trainList.size());
 
+        INDArray dataTest = getIndArray(testList);
+        long[] shape = dataTest.shape();
+        System.out.println("INDArray test: " + Arrays.toString(shape));
+        INDArray dataTrain = getIndArray(trainList);
+        long[] shape2 = dataTrain.shape();
+        System.out.println("INDArray train: " + Arrays.toString(shape2));
 
 
-        double[][] testMatrix = new double[testSequences + windowSize][numFeatures];
+    }
 
+    private static INDArray getIndArray(List<String> lines) {
+        int numRows = lines.size();
+        int numCols = lines.get(0).split(",").length;
 
+        INDArray data = Nd4j.create(numRows, numCols);
 
-
-        int filas = lines.size();
-        double[][] resultado = new double[testSequences + windowSize][numFeatures];
-/*
-        for (int i = (totalSamples - trainSequences - windowSize ); i < totalSamples; i++) {
-            String[] valores = lines.get(i).split(",");
-            System.out.println(valores[0] + "    " +valores[1]);
-
-            //testMatrix[i] = new double[valores.length];
-
-            for (int j = 0; j < valores.length; j++) {
-                testMatrix[i][j] = Double.parseDouble(valores[j]);
-            }
-        }
-*/
-
-
-
-
-
-
-
-/*
-        System.out.println("Num lineas con datos: " + totalSamples + "\tNúmero features: " + numFeatures);
-        //double[][] matrix = new double[totalSamples][numFeatures];
-        String[][] matrix = new String[totalSamples][numFeatures];
-
-        for (int i = lines2Skip; i < totalSamples; i++) { //saltar las lineas indicadas
-
+        for (int i = 0; i < numRows; i++) {
             String[] values = lines.get(i).split(",");
-            for (int j = 0; j < numFeatures; j++) {
 
-                matrix[i - lines2Skip][j] = (values[j]);
-
-                //matrix[i - lines2Skip][j] = Double.parseDouble(values[j]);
-                //System.out.print(matrix[i][j] + "\t");
-            }
-            //System.out.println();
-        }
-        if(windowSize + 1 > totalSamples){
-            System.out.println("El número total de muestras + 1 es menor que el tamaño de la ventana, no sale ni una secuencia... se cierra el programa");
-            return;
-        }
-        int numSequences = totalSamples - windowSize + 1 - 1; //Ojo hay que quitar la primera linea que solo label
-        System.out.println("Número de secuencias: " + numSequences);
-        int testSequences = (int)(numSequences* percentageOfTrain);
-        System.out.println("Secuencias de test: " + testSequences);
-        int trainSequences = numSequences - testSequences;
-
-        //INDArray testLabels = Nd4j.create(minibatchSize, 1, windowSize);
-        String[][][] testLabels = new String[minibatchSize][1][windowSize];
-        for (int i = 0; i < minibatchSize; i++) {
-            for (int t = 0; t < windowSize; t++) {
-                testLabels[i][0][t] = matrix[i+t][0];
+            for (int j = 0; j < numCols; j++) {
+                double val = Double.parseDouble(values[j]);
+                data.putScalar(i, j, val);
             }
         }
-        //System.out.println("Test labels shape: " + Arrays.toString(testLabels));
-        //System.out.println(testLabels.);
-        for (int i = 0; i < testLabels.length; i++) {
-            for (int j = 0; j < testLabels[i].length; j++) {
-                for (int k = 0; k < testLabels[i][j].length; k++) {
-                    System.out.println("[" + i + "][" + j + "][" + k + "] = " + testLabels[i][j][k]);
-                }
-            }
-        }
-
-*/
-        /*
-        INDArray trainLabels = Nd4j.create(numSequences - testSequences, 1, windowSize);
-        for (int i = 0; i < trainSequences; i++) {
-            for (int t = 0; t < windowSize; t++) {
-
-                trainLabels.putScalar(new int[]{i, 0, t}, matrix[i + testSequences +t][0]);
-            }
-        }
-        //System.out.println("Train labels shape: " + Arrays.toString(trainLabels.shape()));
-        //System.out.println(trainLabels);
-
-        INDArray testData = Nd4j.create(testSequences,numFeatures, windowSize);
-        for (int i = 0; i < testSequences; i++) {
-            for (int t = 0; t < windowSize; t++) {
-                for (int f = 0; f < 4; f++) {
-                    testData.putScalar(new int[]{i, f, t}, matrix[i+t][f]);
-                 }
-            }
-        }
-        //System.out.println("Test data shape: " + Arrays.toString(testData.shape()));
-        //System.out.println(testData);
-*/
-
-
-
-        //INDArray data = Nd4j.create(matrix);
-        //System.out.println(data);
-
-        //DataSetIterator iterator = new SlidingWindowIterator(data, minibatchSize, windowSize, labelColumn);
-        //iterator.next();
-
-        //Si tu red es RNN/LSTM, el shape suele ser:
-        //[batchSize, numFeatures, timeSteps]
-        //Se comprueba con:
-        //System.out.println(Arrays.toString(ds.getFeatures().shape()));
-
-        //InputSplit inputSplit = new FileSplit(baseDir);
-        //int numLinesToSkip = 0; //Optional, allows us to skip header lines
-        //String delimiter = ","; //Comma-delimited files
-        //SequenceRecordReader reader = new CSVSequenceRecordReader(numLinesToSkip, delimiter);
-
-/*
-
-        DataSetIterator iterator =
-                new SequenceRecordReaderDataSetIterator(reader, minibatchSize, labelIndex, numClasses);
-
-        DataSetIterator iterator2 =
-                new SequenceRecordReaderDataSetIterator(reader,);
-
-        SequenceRecordReaderDataSetIterator iterator =
-                new SequenceRecordReaderDataSetIterator(
-                        trainFeatures,
-                        trainLabels,
-                        minibatchSize,
-                        -1,      // no clasificación
-                        true     // regresión
-                );
-*/
-        //myNetwork.fit(iterator);
+        return data;
     }
 }
