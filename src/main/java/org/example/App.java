@@ -20,10 +20,13 @@ public class App
         System.out.println( "Hello World!" );
         List<String> lines = Files.readAllLines(Paths.get("test.csv"));
         System.out.println("En archivo csv número total de líneas: " + lines.size());
+        System.out.println("Lines to Skip: " + lines2Skip);
+        System.out.println("Percent of train: " + percentageOfTrain);
+        System.out.println("window Size: " + windowSize);
+        System.out.println("Minibatch size: " + minibatchSize);
         for(int i = 0; i < lines2Skip; i++){
             lines.remove(0);
         }
-        //lines.
         int totalSamples   = lines.size();
         int trainSequences = (int)(totalSamples * percentageOfTrain);
         int testSequences  = totalSamples - trainSequences;
@@ -32,10 +35,17 @@ public class App
         System.out.println("Test Sequences:\t\t" + testSequences);
         int numFeatures = lines.get(0).split(",").length;
         System.out.println("Num features:" + numFeatures);
-        List<String> testRows = lines.subList(totalSamples - trainSequences - windowSize, lines.size());
-        System.out.println("Lineas de test: " + testRows.size());
+        List<String> testList = lines.subList(totalSamples - testSequences - windowSize + 1 ,lines.size());
+        System.out.println("Lineas en lista de test: " + testList.size());
+        List<String> trainList = lines.subList(0 ,trainSequences);
+        System.out.println("Lineas en lista de train: " + trainList.size());
+
+
 
         double[][] testMatrix = new double[testSequences + windowSize][numFeatures];
+
+
+
 
         int filas = lines.size();
         double[][] resultado = new double[testSequences + windowSize][numFeatures];
