@@ -1,11 +1,12 @@
 package org.example;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -53,6 +54,35 @@ public class App
 
 
     }
+
+    private void createWindows(INDArray data, int labelIndex) {
+        List<DataSet> windows = new ArrayList<>();
+
+        int rows = data.rows();
+
+        for(int i = 0; i < rows - windowSize; i++) {
+
+            INDArray featureWindow =
+                    data.getRows(i, i + windowSize - 1);
+
+            INDArray label =
+                    data.getRow(i + windowSize).getColumn(labelIndex);
+
+            INDArray features3d = featureWindow
+                    .transpose()
+                    .reshape(1, featureWindow.columns(), windowSize);
+
+            INDArray labels2d = label.reshape(1,1);
+
+            windows.add(new DataSet(features3d, labels2d));
+        }
+    }
+
+
+
+
+
+
 
     private static INDArray getIndArray(List<String> lines) {
         int numRows = lines.size();
