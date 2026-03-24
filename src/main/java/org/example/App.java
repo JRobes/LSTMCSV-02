@@ -3,6 +3,8 @@ package org.example;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.NDArrayIndex;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -48,6 +50,7 @@ public class App
         INDArray dataTest = getIndArray(testList);
         long[] shape = dataTest.shape();
         System.out.println("INDArray test: " + Arrays.toString(shape));
+        System.out.println(dataTest);
         INDArray dataTrain = getIndArray(trainList);
         long[] shape2 = dataTrain.shape();
         System.out.println("INDArray train: " + Arrays.toString(shape2));
@@ -62,11 +65,18 @@ public class App
         List<DataSet> windows = new ArrayList<>();
 
         int rows = data.rows();
-
+        System.out.println("createWindows -> Numero de rows: " + rows);
         for(int i = 0; i < rows - windowSize; i++) {
 
-            INDArray featureWindow =
-                    data.getRows(i, i + windowSize - 1);
+            INDArray featureWindow = data.get(NDArrayIndex.interval(i, i + windowSize), NDArrayIndex.all());
+
+            System.out.println();
+            System.out.println(featureWindow);
+            System.out.println();
+            long[] shape = featureWindow.shape();
+            System.out.println(i);
+            System.out.println(i + windowSize - 1);
+            System.out.println("INDArray featureWindow: " + Arrays.toString(shape));
 
             INDArray label =
                     data.getRow(i + windowSize).getColumn(labelIndex);
@@ -75,9 +85,9 @@ public class App
                     .transpose()
                     .reshape(1, featureWindow.columns(), windowSize);
 
-            INDArray labels2d = label.reshape(1,1);
+            //INDArray labels2d = label.reshape(1,1);
 
-            windows.add(new DataSet(features3d, labels2d));
+            //windows.add(new DataSet(features3d, labels2d));
         }
 
 
