@@ -16,6 +16,7 @@
     <nd4j.version>1.0.0-M2.1</nd4j.version>
     <dl4j.version>1.0.0-M2.1</dl4j.version>
     <datavec.version>0.5.0</datavec.version>
+    <slf4j.version>2.0.17</slf4j.version>
   </properties>
 
   <dependencies>
@@ -39,12 +40,21 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <!-- Source: https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+    <!--
+    Source - https://stackoverflow.com/a/9919375
+    Posted by Prasanna, modified by community. See post 'Timeline' for change history
+    Retrieved 2026-03-25, License - CC BY-SA 4.0
+    -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.17</version>
-      <scope>compile</scope>
+      <version>${slf4j.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+
   </dependencies>
 </project>

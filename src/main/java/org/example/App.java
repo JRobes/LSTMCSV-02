@@ -3,7 +3,10 @@ package org.example;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.dataset.DataSet;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.indexing.INDArrayIndex;
 import org.nd4j.linalg.indexing.NDArrayIndex;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,12 +21,15 @@ import java.util.List;
  */
 public class App 
 {
+    static Logger log = LoggerFactory.getLogger(App.class);
+
     private static int lines2Skip = 1;
     private static double percentageOfTrain = 0.8; //Entero de 1 a 100
     private static int windowSize = 7;
     private static int minibatchSize = 4; //Number of examples in each minibatch
     private static int labelColumn = 0;
     public static void main( String[] args ) throws IOException, InterruptedException {
+        log.info("Hola");
         System.out.println( "Hello World!" );
         List<String> lines = Files.readAllLines(Paths.get("test.csv"));
         System.out.println("En archivo csv número total de líneas: " + lines.size());
@@ -57,7 +63,7 @@ public class App
 
         List<DataSet> win = createWindows(dataTest, 0);
 
-        System.out.println(win.get(0).toString());
+        //System.out.println("La lista de los DataSets: "  + win.get(0).toString());
 
     }
 
@@ -70,16 +76,16 @@ public class App
 
             INDArray featureWindow = data.get(NDArrayIndex.interval(i, i + windowSize), NDArrayIndex.all());
 
-            System.out.println();
+            System.out.println("-----------------------------------------------");
+            System.out.println("Imprimir el INDArray (el intervalo):");
             System.out.println(featureWindow);
-            System.out.println();
             long[] shape = featureWindow.shape();
-            System.out.println(i);
-            System.out.println(i + windowSize - 1);
             System.out.println("INDArray featureWindow: " + Arrays.toString(shape));
+            System.out.println("-----------------------------------------------");
 
-            INDArray label =
-                    data.getRow(i + windowSize).getColumn(labelIndex);
+
+
+            INDArray labelWindow =  data.get(NDArrayIndex.interval(i, i + windowSize), NDArrayIndex.point(labelIndex));
 
             INDArray features3d = featureWindow
                     .transpose()
