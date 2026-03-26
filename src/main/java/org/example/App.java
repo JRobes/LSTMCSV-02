@@ -85,7 +85,15 @@ public class App
 
 
 
-            INDArray labelWindow =  data.get(NDArrayIndex.interval(i, i + windowSize), NDArrayIndex.point(labelIndex));
+            INDArray labelWindow =  data.get(NDArrayIndex.interval(i+1, i + windowSize +1), NDArrayIndex.point(labelIndex));
+
+            System.out.println("-----------------------------------------------");
+            System.out.println("Imprimir el INDArray (el intervalo):");
+            System.out.println(labelWindow);
+            long[] shape3 = labelWindow.shape();
+            System.out.println("INDArray labelWindow: " + Arrays.toString(shape3));
+            System.out.println("-----------------------------------------------");
+
 
             INDArray features3d = featureWindow
                     .transpose()
