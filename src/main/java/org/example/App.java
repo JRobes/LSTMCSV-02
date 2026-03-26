@@ -99,9 +99,23 @@ public class App
                     .transpose()
                     .reshape(1, featureWindow.columns(), windowSize);
 
-            //INDArray labels2d = label.reshape(1,1);
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
+            long[] shape4 = features3d.shape();
+            System.out.println("INDArray featureWindow: " + Arrays.toString(shape4));
+            System.out.println("-----------------------------------------------");
 
-            //windows.add(new DataSet(features3d, labels2d));
+
+            INDArray labels3d = labelWindow.reshape(1, 1, windowSize);
+
+            System.out.println("-----------------------------------------------");
+            System.out.println(labels3d);
+            System.out.println("-----------------------------------------------");
+            long[] shape5 = labels3d.shape();
+            System.out.println("INDArray labelWindow: " + Arrays.toString(shape5));
+            System.out.println("-----------------------------------------------");
+
+            windows.add(new DataSet(features3d, labels3d));
         }
 
 
