@@ -30,13 +30,9 @@ public class App
     private static int labelColumn = 0;
     public static void main( String[] args ) throws IOException, InterruptedException {
         log.info("Hola");
-        System.out.println( "Hello World!" );
         List<String> lines = Files.readAllLines(Paths.get("test.csv"));
-        System.out.println("En archivo csv número total de líneas: " + lines.size());
-        System.out.println("Lines to Skip: " + lines2Skip);
-        System.out.println("Percent of train: " + percentageOfTrain);
-        System.out.println("window Size: " + windowSize);
-        System.out.println("Minibatch size: " + minibatchSize);
+        log.info("En archivo csv número total de líneas: " + lines.size() + "\t\t Lines to skip: " + lines2Skip);
+        log.info("Percent of train: " + percentageOfTrain + "\t\tWindow Size: " + windowSize +  "\t\tMinibatch size: " + minibatchSize);
         for(int i = 0; i < lines2Skip; i++){
             lines.remove(0);
         }
@@ -61,10 +57,18 @@ public class App
         long[] shape2 = dataTrain.shape();
         System.out.println("INDArray train: " + Arrays.toString(shape2));
 
-        List<DataSet> win = createWindows(dataTest, 0);
+        List<DataSet> winTest = createWindows(dataTest, 0);
+        List<DataSet> winTrain = createWindows(dataTrain, 0);
 
-        //System.out.println("La lista de los DataSets: "  + win.get(0).toString());
+        System.out.println("la lista de los datasets de test tiene size = " + winTest.size());
+        System.out.println(winTest.get(3).getLabels());
+        System.out.println();
+        System.out.println(winTest.get(3).getFeatures());
 
+        System.out.println("la lista de los datasets de train tiene size = " + winTrain.size());
+        System.out.println(winTrain.get(0).getLabels());
+        System.out.println();
+        System.out.println(winTrain.get(0).getFeatures());
     }
 
     private static List<DataSet> createWindows(INDArray data, int labelIndex) {
